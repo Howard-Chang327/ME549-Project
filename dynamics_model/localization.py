@@ -18,17 +18,30 @@ if __name__ == '__main__':
     k_dt = 0.17069465800865732
     dt = 0.1
     
-    path = [x0]
+    # nonlinear dynamics
+    state = np.zeros((len(initial_control)+1,6))
+    state[0] = x0
     for i in range(len(initial_control)):
-        path.append(dynamics.discrete_step(x0,initial_control[i],k_dt))
-        x0 = path[-1]
+        state[i+1] = (dynamics.discrete_step(x0,initial_control[i],k_dt))
+        x0 = state[i+1]
         
-    print(path)
-    print(len(path))
+    print(state)
+    print(len(state))
+    plt.plot(state[:,0],state[:,2])
+    plt.show()
+
+    # linearized dynamics
+    linear_state = np.zeros((len(initial_control)+1,6))
+    linear_state[0] = x0
+    for i in range(len(initial_control)):
+        linear_state[i+1] = dynamics.A(state[i+1], initial_control[i]) @ x0 + dynamics.B(state[i+1], initial_control[i]) @ initial_control[i]
     
-    plt.plot(path[:,0],path[:,2])
-    
-    
+    print(linear_state)
+    print(len(linear_state))
+    plt.plot(linear_state[:,0],linear_state[:,2])
+    plt.show()
+
+    #########################################
 #     print(dynamics.m)
 #     step = dynamics.discrete_step(state, control, dt)
 #     print(step)

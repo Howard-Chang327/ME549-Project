@@ -43,7 +43,7 @@ class BasePlanarQuadrotor:
         
         return state + dt * self.ode(state, control)
 
-    def A(self, state, control, dt):
+    def A(self, state, control):
         """Jacobian matrix for the discrete-time dynamics."""
         x, v_x, y, v_y, phi, omega = state
         T_1, T_2 = control
@@ -52,10 +52,11 @@ class BasePlanarQuadrotor:
             [0, -self.Cd_v / self.m, 0, 0, -(T_1 + T_2) * np.cos(phi) / self.m, 0],
             [0, 0, 0, 1, 0, 0],
             [0, 0, 0, -self.Cd_v / self.m, -(T_1 + T_2) * np.sin(phi) / self.m, 0],
+            [0, 0, 0, 0, 0, 1],
             [0, 0, 0, 0, 0, -self.Cd_phi / self.Iyy]
         ])
 
-    def B(self, state, control, dt):
+    def B(self, state, control):
         """Jacobian matrix for the discrete-time control."""
         x, v_x, y, v_y, phi, omega = state
         T_1, T_2 = control
