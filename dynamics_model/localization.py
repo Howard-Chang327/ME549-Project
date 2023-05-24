@@ -34,7 +34,7 @@ if __name__ == '__main__':
     linear_state = np.zeros((len(initial_control)+1,6))
     linear_state[0] = x0
     for i in range(len(initial_control)):
-        linear_state[i+1] = dynamics.A(state[i+1], initial_control[i]) @ x0 + dynamics.B(state[i+1], initial_control[i]) @ initial_control[i]
+        linear_state[i+1] = dynamics.A(state[i+1], initial_control[i]) @ linear_state[i] + dynamics.B(state[i+1], initial_control[i]) @ initial_control[i]
     
     print(linear_state)
     print(len(linear_state))
