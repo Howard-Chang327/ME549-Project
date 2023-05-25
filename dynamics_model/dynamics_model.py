@@ -42,31 +42,31 @@ class BasePlanarQuadrotor:
         """Discrete-time dynamics (Euler-integrated) of a planar quadrotor."""
         
         return state + dt * self.ode(state, control)
-
-    def A(self, state, control):
+    
+    def A(self, state, control, dt):
         """Jacobian matrix for the discrete-time dynamics."""
         x, v_x, y, v_y, phi, omega = state
         T_1, T_2 = control
         return np.array([
-            [0, 1, 0, 0, 0, 0],
-            [0, -self.Cd_v / self.m, 0, 0, -(T_1 + T_2) * np.cos(phi) / self.m, 0],
-            [0, 0, 0, 1, 0, 0],
-            [0, 0, 0, -self.Cd_v / self.m, -(T_1 + T_2) * np.sin(phi) / self.m, 0],
-            [0, 0, 0, 0, 0, 1],
-            [0, 0, 0, 0, 0, -self.Cd_phi / self.Iyy]
-        ])
+            [1, dt, 0, 0, 0, 0],
+            [0, -self.Cd_v*dt/self.m + 1, 0, 0, dt*(-T_1 - T_2)*np.cos(phi)/self.m, 0],
+            [0, 0, 1, dt, 0, 0],
+            [0, 0, 0, -self.Cd_v*dt/self.m + 1, -dt*(T_1 + T_2)*np.sin(phi)/self.m, 0],
+            [0, 0, 0, 0, 1, dt],
+            [0, 0, 0, 0, 0, -self.Cd_phi*dt/self.Iyy + 1]
+        ])  # type: ignore
 
-    def B(self, state, control):
+    def B(self, state, control, dt):
         """Jacobian matrix for the discrete-time control."""
         x, v_x, y, v_y, phi, omega = state
         T_1, T_2 = control
         return np.array([
             [0, 0],
-            [np.sin(phi) / self.m, np.sin(phi) / self.m],
+            [-dt*np.sin(phi)/self.m, -dt*np.sin(phi)/self.m],
             [0, 0],
-            [-np.cos(phi) / self.m, -np.cos(phi) / self.m],
+            [dt*np.cos(phi)/self.m, dt*np.cos(phi)/self.m],
             [0, 0],
-            [self.l / self.Iyy, -self.l / self.Iyy]
+            [-dt*self.l/self.Iyy, dt*self.l/self.Iyy]
         ])
        
     def control_sequence(self):

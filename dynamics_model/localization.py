@@ -5,14 +5,12 @@ import numpy as np
 
 
 
-
-
 if __name__ == '__main__':
     
     dynamics = BasePlanarQuadrotor()
     
     # initial control sequence
-    initial_control = dynamics.control_sequence()
+    initial_control = dynamics.control_sequence()[:1]
     
     x0 = np.array([0,0,5,0,0,0]) # initial state
     k_dt = 0.17069465800865732
@@ -25,20 +23,27 @@ if __name__ == '__main__':
         state[i+1] = (dynamics.discrete_step(x0,initial_control[i],k_dt))
         x0 = state[i+1]
         
-    print(state)
+    print(state[0])
     print(len(state))
     plt.plot(state[:,0],state[:,2])
-    plt.show()
-
-    # linearized dynamics
-    linear_state = np.zeros((len(initial_control)+1,6))
-    linear_state[0] = x0
-    for i in range(len(initial_control)):
-        linear_state[i+1] = dynamics.A(state[i+1], initial_control[i]) @ linear_state[i] + dynamics.B(state[i+1], initial_control[i]) @ initial_control[i]
+    # plt.show()
     
-    print(linear_state)
+    # linearized dynamics
+    
+    linear_state = np.zeros((len(initial_control)+1,6))
+    linear_state[0] = np.array([0,0,5,0,0,0])
+    for i in range(len(initial_control)):
+        
+        A = dynamics.A(linear_state[i], initial_control[i], k_dt)
+        B = dynamics.B(linear_state[i], initial_control[i], k_dt)
+        print("for debug", A, B)
+        
+        x_dot = A @ linear_state[i] + B @ initial_control[i]
+        linear_state[i+1] = linear_state[i] + k_dt * x_dot
+        
+    print(linear_state[0])
     print(len(linear_state))
-    plt.plot(linear_state[:,0],linear_state[:,2])
+    plt.plot(linear_state[:,0],linear_state[:,2], color='red')
     plt.show()
 
     #########################################
