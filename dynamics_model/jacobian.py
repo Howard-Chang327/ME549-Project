@@ -44,6 +44,7 @@ f5d = dt*omega + phi
 f6d = dt*(-Cd_phi*omega + (T_2 - T_1)*l)/Iyy + omega
 
 F_d = sp.Matrix([f1d, f2d, f3d, f4d, f5d, f6d])
+
 # Compute the Jacobian
 J_d = F_d.jacobian(V_dynamics)
 J_c = F_d.jacobian(V_control)
