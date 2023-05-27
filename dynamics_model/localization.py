@@ -7,63 +7,79 @@ if __name__ == '__main__':
     
     dynamics = BasePlanarQuadrotor()
     
-    # initial control sequence
-    initial_control = dynamics.control_sequence()
-    x0 = np.array([0,0,5,0,0,0]) # initial state
+    # x0 = np.array([0,0,5,0,0,0])
+    # sigma_0 = np.eye(6) * 0.01
+    # path_ideal = [x0]
+    # path_ekf = [x0]
+    # measurement = []
+    # N = 20
+    # dt = 0.17069465800865732
     
-    N = len(initial_control) # number of time steps
-    
-    k_dt = 0.17069465800865732
-    
-    # nonlinear dynamics
-    state = np.zeros((N+1,6))
-    state[0] = x0
-    for i in range(len(initial_control)):
-        state[i+1] = (dynamics.discrete_step(x0,initial_control[i],k_dt))
-        x0 = state[i+1]
+    # for i in range(19):
+    #     # action = dynamics.control_generate()
+    #     action = dynamics.control_sequence()[i]
+    #     print("action: ", action)
+    #     # ideal path
+    #     init_state_ideal = x0
+    #     ideal_next = (dynamics.discrete_step(init_state_ideal,action,dt))
+    #     path_ideal.append(ideal_next)
+    #     init_state_ideal = ideal_next
         
-    # print(state[0])
-    # print(len(state))
-    # plt.plot(state[:,0],state[:,2])
+    #     # ekf path
+    #     init_state_ekf = x0
+    #     ekf_next, sigma_next, Y = EKF(dynamics, action, init_state_ekf, sigma_0, dt)
+    #     init_state_ekf = ekf_next
+    #     sigma_0 = sigma_next
+    #     path_ekf.append(ekf_next)
+    #     measurement.append(Y)
 
-    #########################################
-    # ekf
+    # path_ideal = np.array(path_ideal)
+    # path_ekf = np.array(path_ekf)
+    # measurement = np.array(measurement)
+    
+    # plt.plot(path_ideal[:,0],path_ideal[:,2], color='red', label='ekf')
+    # plt.plot(path_ekf[:,0],path_ekf[:,2], color='blue', label='jacob')
+    # plt.scatter(measurement[:,0],measurement[:,1], color='green', label='measurement')
+    # plt.legend()
+    # plt.show()    
+    
+    
+    #########################
     
     x0 = np.array([0,0,5,0,0,0])
+    x0_ekf = np.array([0,0,5,0,0,0])
     sigma_0 = np.eye(6) * 0.01
     path = [x0]
+    path_ekf = [x0_ekf]
     measurement = []
-    
-    for i in range(19):
-        x_next, sigma_next, Y = EKF(dynamics, initial_control[i], x0, sigma_0, k_dt)
-        x0 = x_next
-        sigma_0 = sigma_next
-        path.append(x_next)
-        measurement.append(Y)
-        # print("for debug simga next:", i, sigma_next)
-        # print("for debug x_next:", i, x_next[0], x_next[2] ,Y)
-    
-    x0 = np.array([0,0,5,0,0,0])
-    path_jacob = [x0]
-    
-    for i in range(19):
-        # x_dot = dynamics.A_con(x0, initial_control[i]) @ x0 + dynamics.B_con(x0, initial_control[i]) @ initial_control[i]
-        # x_new_jacob = x0 + k_dt * x_dot
-        x_new_jacob = dynamics.A(x0, initial_control[i], k_dt) @ x0 + dynamics.B(x0, initial_control[i], k_dt) @ initial_control[i]
-        path_jacob.append(x_new_jacob)
-        x0 = x_new_jacob
-        # print("for debug x_new_jacob:", i, x_new_jacob[0], x_new_jacob[2])
-        
-    measurement = np.array(measurement)
-    path_jacob = np.array(path_jacob)    
-    path = np.array(path)
-    plt.scatter(measurement[:,0],measurement[:,1], color='green', label='measurement')
-    plt.plot(path[:,0],path[:,2], color='red', label='ekf')
-    plt.plot(path_jacob[:,0],path_jacob[:,2], color='blue', label='jacob')
-    plt.legend()
-    plt.show()    
-    
+    N = 20
+    dt = 0.1
 
+    for i in range(N):
+        action = dynamics.control_generate()
+        x_next = dynamics.discrete_step(path[i],action,dt)
+        path.append(x_next)
+        x0 = x_next
+        print("x next: ", x_next)
+        
+        # ekf 
+        ekf_next, sigma_next, Y = EKF(dynamics, action, x0_ekf, x_next, sigma_0, dt)
+        path_ekf.append(ekf_next)
+        x0_ekf = ekf_next
+        sigma_0 = sigma_next
+        measurement.append(Y)
+         
+    path = np.array(path)
+    path_ekf = np.array(path_ekf)
+    measurement = np.array(measurement)
+    
+    plt.plot(path[:,0],path[:,2], color='red', label='ideal')
+    plt.plot(path_ekf[:,0],path_ekf[:,2], color='blue', label='ekf')
+    plt.scatter(measurement[:,0],measurement[:,1], color='green', label='measurement')
+    plt.legend()
+    plt.show()
+    
+    
     
     
     

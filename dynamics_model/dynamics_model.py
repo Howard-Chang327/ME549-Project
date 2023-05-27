@@ -101,6 +101,10 @@ class BasePlanarQuadrotor:
             [1, 0, 0, 0, 0, 0],
             [0, 0, 1, 0, 0, 0]
         ])
+    
+    def control_generate(self):
+        """generate a random action"""
+        return np.random.normal(20,1,2)
         
     def control_sequence(self):
         initial_path = np.array([
