@@ -1,12 +1,9 @@
-"""
-Dynamics model for planar quadcoptor
-"""
-
 import numpy as np
-# import jax
-# import jax.numpy as jnp
 
 class BasePlanarQuadrotor:
+    """
+    Dynamics model for planar quadcoptor.
+    """
 
     def __init__(self):
         # Dynamics constants
@@ -57,7 +54,7 @@ class BasePlanarQuadrotor:
         ])
 
     def B_con(self, state, control):
-        """Jacobian matrix for the continuous-time control."""
+        """Jacobian matrix for the continuous-time control input."""
         x, v_x, y, v_y, phi, omega = state
         T_1, T_2 = control
         return np.array([
@@ -83,7 +80,7 @@ class BasePlanarQuadrotor:
         ]) # type: ignore
         
     def B(self, state, control, dt):
-        """Jacobian matrix for the discrete-time control."""
+        """Jacobian matrix for the discrete-time control input."""
         x, v_x, y, v_y, phi, omega = state
         T_1, T_2 = control
         return np.array([
@@ -98,13 +95,13 @@ class BasePlanarQuadrotor:
     def H(self):
         """Jacobian matrix for the measurement model."""
         return np.array([
-            [1, 0, 0, 0, 0, 0],
-            [0, 0, 1, 0, 0, 0],
-            [0 ,0, 0 ,0, 1, 0]
+            [1, 0, 0, 0, 0, 0], # x
+            [0, 0, 1, 0, 0, 0], # y          
+            [0 ,0, 0 ,0, 1, 0]  # phi
         ])
     
     def control_generate(self):
-        """generate a random action"""
+        """Generate a random control input T_1, T_2."""
         return np.random.normal(20,1,2)
 
     

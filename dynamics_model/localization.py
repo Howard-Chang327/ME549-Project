@@ -8,10 +8,11 @@ if __name__ == '__main__':
     
     dynamics = BasePlanarQuadrotor()
 
+    # initial state
     x0 = np.array([0,0,0,0,0,0])
     x0_ekf = np.array([0,0,0,0,0,0])
     sigma_0 = np.eye(6) * 0.01
-    path = [x0]
+    ideal_path = [x0]
     path_ekf = [x0_ekf]
     measurement = []
     true_path = []
@@ -22,8 +23,8 @@ if __name__ == '__main__':
         
         # ideal path
         action = dynamics.control_generate()
-        x_next = dynamics.discrete_step(path[i],action,dt)
-        path.append(x_next)
+        x_next = dynamics.discrete_step(x0,action,dt)
+        ideal_path.append(x_next)
         x0 = x_next
         
         # ekf 
@@ -34,7 +35,7 @@ if __name__ == '__main__':
         measurement.append(Y)
         true_path.append(true_traj)
          
-    path = np.array(path)
+    ideal_path = np.array(ideal_path)
     path_ekf = np.array(path_ekf)
     measurement = np.array(measurement)
     true_path = np.array(true_path)
@@ -47,12 +48,12 @@ if __name__ == '__main__':
     
     fig, ax = plt.subplots()
     
-    ax.plot(path[:,0],path[:,2], color='yellow', label='ideal')
+    ax.plot(ideal_path[:,0],ideal_path[:,2], color='yellow', label='ideal')
     ax.scatter(measurement[:,0],measurement[:,1], color='pink', label='measurement')
     ax.plot(true_path[:,0],true_path[:,1], color='c', label='true')
     ax.legend()
     
-    line_ekf, = ax.plot([], [], '*', color='m')  # Node moving along EKF path
+    line_ekf, = ax.plot([], [], 'x', color='m')  # Node moving along EKF path
     line_ekf_path, = ax.plot([], [], '-', color='m')  # Path of the moving node
 
     # Initialization function for the animation
