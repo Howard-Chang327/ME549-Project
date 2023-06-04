@@ -43,6 +43,7 @@ def EKF(dym,action,mu,state,sigma,dt):
     # time update
     Xhat_pred = A @ mu + B @ action # predicted state
     P_pred = A @ sigma @ A.T + Q # predicted covariance
+    
    
     
     S = H @ sigma @ H.T + R
