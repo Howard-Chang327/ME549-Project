@@ -1,26 +1,28 @@
 # ME549 Project
-### Kalman Filter-Based Pose and Altitude Estimation of a Quadcopter in a Virtual Environment
+### Extended Kalman Filter-Based Pose and Altitude Estimation for a Planner Quadcopter
 
-Member: William Lin, Howard Chang, Joslyn Chen
+Members: William Lin, Howard Chang, Joslyn Chen
+
 ### Introduction
-This project aims to design and implement a Kalman Filter for estimating the pose and altitude of a quadcopter in a virtual environment. The proposed system will use sensor data fusion techniques to improve the accuracy of the quadcopter's state estimation, resulting in a more stable and robust flight control system. This project will be implemented using Python programming language, emphasizing optimizing the algorithm's performance and efficiency.
-
+Our project aims to design and implement an Extended Kalman Filter (EKF) for accurately estimating the pose and altitude of a planner quadcopter. The implementation will be done using Python programming language, with a key emphasis on the performance and efficiency of the algorithm.
 
 ### Problem Statement
-Imagine in a virtual environment with simulated sensors, the goal is to implement a Kalman Filter-based system that can accurately estimate the pose and altitude of a quadcopter. The project will focus on the following aspects:
+In a virtual environment with simulated sensors, our goal is to develop an EKF-based system that can accurately estimate the pose and altitude of a quadcopter using noisy measurements derived from the ideal locations. The project will focus on the following aspects:
 
-Developing a mathematical model for the quadcopter's dynamics
-Implementing a Kalman Filter for state estimation
-Integrating sensor data from the virtual environment
-Analyzing the performance by visualizing the estimated values from Kalman Filter compared to the ground truth data.
+1. Developing a mathematical model encapsulating the dynamics of the quadcopter.
+2. Implementing an Extended Kalman Filter for state estimation.
+3. Integrating simulated sensor data, which incorporates noise into the ideal pose and altitude of the quadcopter.
+4. Evaluating the performance by comparing the estimated values from the EKF with the ground truth data.
 
-### Proposed method
-Literature review and understanding of the Kalman Filter and its application to quadcopter state estimation.
-Development of the quadcopter's mathematical model, considering the system's dynamics and kinematics.
-Design and implementation of the Kalman Filter algorithm in Python.
-Integration of sensor data from the virtual environment, including IMU and altitude sensor.
-Testing and validating the implemented system in random flight routes within the virtual environment.
-Analyze the estimation accuracy of implemented Kalman Filter.
+### Proposed Method
+Our project will follow these sequential steps:
 
-### Expectations from the project
-Through this project, we hope to gain hands-on experience in implementing the Kalman Filter and sensor fusion. To be specific, we expect to deliver a well-documented Python implementation of a Kalman Filter for quadcopter state estimation, focusing on pose and altitude. The project will provide a comprehensive evaluation of the implemented system, emphasizing its accuracy and robustness in various simulated scenarios.
+1. Conduct a literature review to understand the Extended Kalman Filter and its application to quadcopter state estimation.
+2. Develop a mathematical model for the quadcopter, considering both dynamics and kinematics of the system.
+3. Design and implement the Extended Kalman Filter algorithm using Python.
+4. Generate simulated sensor data by adding noise to the ideal pose and altitude of the quadcopter.
+5. Test and validate the implemented system across random flight routes within the virtual environment.
+6. Analyze the estimation accuracy of the implemented Extended Kalman Filter by comparing the estimates with the ground truth data.
+
+### Expectations from the Project
+Through the course of this project, we expect to gain hands-on experience in the implementation of the Extended Kalman Filter and the application of sensor fusion techniques. Specifically, we plan to deliver a Python-based, well-documented implementation of an EKF for quadcopter state estimation, with a focus on pose and altitude. A comprehensive evaluation of the implemented system will be provided, highlighting its accuracy and robustness across various simulated scenarios.
